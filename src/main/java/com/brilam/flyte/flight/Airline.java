@@ -9,7 +9,7 @@ import javax.persistence.Table;
 @Entity(name = "airlines")
 public class Airline {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
   private String name;
 

@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 public interface LocationRepository extends CrudRepository<Location, Integer> {
   List<Location> findById(int id);
   
-  int findByName(String name);
+  List<Location> findByName(String name);
   
   List<Location> findAll();
 }

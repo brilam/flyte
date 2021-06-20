@@ -17,7 +17,7 @@ public class LocationService {
     return locationRepository.findById(id);
   }
   
-  public int findLocationIdByName(String name) {
+  public List<Location> findLocationByName(String name) {
     return locationRepository.findByName(name);
   }
   

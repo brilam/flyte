@@ -19,13 +19,20 @@ public class LocationController {
   }
   
   @GetMapping("/api/locations")
-  public List<Location> getLocation(@RequestParam(required=false) Integer id) {
+  public List<Location> getLocation(@RequestParam(required=false) Integer id, @RequestParam(required=false) String name) {
     
     LOGGER.info("ID: " + id);
-    if (id == null) {
-      return locationService.getAllLocations();
-    } else {
+    LOGGER.info("Name: " + name);
+
+    if (id != null) {
       return locationService.findLocationById(id);
     }
+    
+    if (name != null) {
+      return locationService.findLocationByName(name);
+    }
+   
+    // Fallback for nothing provided or both optional parameters provided
+    return locationService.getAllLocations();
   }
 }

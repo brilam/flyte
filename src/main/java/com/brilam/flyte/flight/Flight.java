@@ -1,7 +1,7 @@
 package com.brilam.flyte.flight;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,27 +10,37 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity(name = "flights")
 public class Flight {
   @Id
-  @GeneratedValue(strategy=GenerationType.AUTO)
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
   private int id;
   
-  private Date departureDate;
+  @Column(name = "arrivalDate", columnDefinition="DATETIME")
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private Date arrivalDate;
+  
+  @Column(name = "departureDate", columnDefinition="DATETIME")
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  private Date departureDate;
+  
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name="airline", referencedColumnName="id")
   private Airline airline;
+  
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "origin", referencedColumnName = "id")
   private Location origin;
+  
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "destination", referencedColumnName = "id")
   private Location destination;
+  
   @Column(name = "travelTime")
   private long totalTimeInSeconds;
+  
   private BigDecimal cost;
   private int numSeats;
   
