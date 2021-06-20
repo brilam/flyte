@@ -1,7 +1,5 @@
 package com.brilam.flyte.login;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import at.favre.lib.crypto.bcrypt.BCrypt;
@@ -17,7 +15,8 @@ public class LoginService {
   }
   
   /**
-   * Authenticates the user with the given login information.
+   * Returns an authentication status after authenticating the user with 
+   * the given login information.
    * @param loginInfo login information (contains username and password)
    * @return if login was successful
    */
@@ -35,6 +34,12 @@ public class LoginService {
     return new AuthenticationStatus(isMatchingPassword);
   }
   
+  /**
+   * Returns a registration status after registering the user with the
+   * given registeration information.
+   * @param registerInfo register information (email, user, personal details)
+   * @return if registration was successful
+   */
   public RegistrationStatus register(RegisterInformation registerInfo) {
     boolean isUserExists = userRepository.isUserExists(registerInfo.getUsername(), registerInfo.getEmail()) > 0;
     if (isUserExists) {
