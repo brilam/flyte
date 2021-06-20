@@ -1,6 +1,6 @@
 package com.brilam.flyte.flight;
 
-import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,7 +16,7 @@ public class AirlineController {
   }
   
   @GetMapping("/api/airlines")
-  public List<Airline> getAirline(@RequestParam(required=false) Integer id, @RequestParam(required=false) String name) {
+  public Set<Airline> getAirline(@RequestParam(required=false) Integer id, @RequestParam(required=false) String name) {
     if (id != null) {
       return airlineService.findAirlineById(id);
     }

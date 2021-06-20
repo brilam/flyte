@@ -1,12 +1,12 @@
 package com.brilam.flyte.flight;
 
-import java.util.List;
+import java.util.Set;
 import org.springframework.data.repository.CrudRepository;
 
 public interface FlightRepository extends CrudRepository<Flight, Integer> {
-  List<Flight> findById(int id);
+  Set<Flight> findById(int id);
   
-  List<Flight> findByOriginAndDestination(String origin, String destination);
+  Set<Flight> findByOriginAndDestination(String origin, String destination);
   
-  List<Flight> findAll();
+  Set<Flight> findAll();
 }

@@ -1,6 +1,6 @@
 package com.brilam.flyte.flight;
 
-import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +13,11 @@ public class FlightService {
     this.flightRepository = flightRepository;
   }
   
-  public List<Flight> findFlightById(int id) {
+  public Set<Flight> findFlightById(int id) {
     return flightRepository.findById(id);
   }
   
-  public List<Flight> getAllFlights() {
+  public Set<Flight> getAllFlights() {
     return flightRepository.findAll();
   }
 }
