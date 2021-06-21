@@ -1,9 +1,12 @@
 package com.brilam.flyte.flight;
 
 import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class SearchInfo {
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private Date date;
+  
   private int originId;
   private int destinationId;
   
