@@ -63,7 +63,6 @@ public class FlightGraph {
         long currDeparture = currFlight.getDepartureDate().getTime();
         long duration = currDeparture - arrivalTime;
         
-        // If the duration
         if ((duration >= FlyteApplication.MINIMUM_LAYOVER_TIME_MILLIS) && (duration <= FlyteApplication.MAXIMUM_LAYOVER_TIME_MILLIS)) {
           flightGraph.get(flight.getFlightNumber()).add(currFlight.getFlightNumber());
         }

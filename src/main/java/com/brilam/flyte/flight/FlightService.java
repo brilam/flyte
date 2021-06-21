@@ -2,7 +2,7 @@ package com.brilam.flyte.flight;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -51,13 +51,13 @@ public class FlightService {
 
     LOGGER.info(String.format("Flight ID: %d Origin ID: %d Destination ID: %d", flight.getFlightNumber(), originId, destinationId));
     if ((flight.getDestination().getId() == destinationId) && (!flight.isFullyBooked())) {
-      Map<Integer, Flight> flights = new HashMap<>();
+      Map<Integer, Flight> flights = new LinkedHashMap<>();
       flights.put(flight.getFlightNumber(), findFlightById(flight.getFlightNumber()).get(0));
       result.add(new Itinerary(flights));
     } else {
      // Go through every connecting flight
       for (Flight nextFlight : connectingFlights) {
-        Map<Integer, Flight> alreadyVisitedFlights = new HashMap<>();
+        Map<Integer, Flight> alreadyVisitedFlights = new LinkedHashMap<>();
         ArrayList<Integer> alreadyVisitedOrigin = new ArrayList<>();
         if (!(nextFlight.isFullyBooked())) {
           LOGGER.info("Doing search...");
@@ -93,7 +93,7 @@ public class FlightService {
               && (!(nextFlight.isFullyBooked()))) {
 
             // Add onto data for every valid neighboring flight
-            Map<Integer, Flight> updatedFlightPath = new HashMap<>();
+            Map<Integer, Flight> updatedFlightPath = new LinkedHashMap<>();
             updatedFlightPath.putAll(alreadyVisitedFlights);
             
             ArrayList<Integer> alreadyVisitedPath = new ArrayList<>(alreadyVisitedOrigin);
