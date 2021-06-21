@@ -30,6 +30,13 @@ public class FlightService {
     return flightRepository.findAll();
   }
   
+  /**
+   * Returns all itinerary that go from origin ID to destination ID.
+   * @param date the date of departure
+   * @param originId the origin ID (where you depart from)
+   * @param destinationId the destination ID (the location where you wish to go to)
+   * @return all itinerary that go from origin ID to destination ID
+   */
   public List<Itinerary> searchFlights(Date date, int originId, int destinationId) {
     List<Flight> allFlights = getAllFlights();    
     FlightGraph flightGraph = new FlightGraph(allFlights);
@@ -45,11 +52,21 @@ public class FlightService {
     return possibleItineraries;
   }
   
+  /**
+   * Returns all matching itinerary that go from
+   * @param flightGraph
+   * @param flight
+   * @param originId
+   * @param destinationId
+   * @return
+   */
   private List<Itinerary> getMatchingItineraries(FlightGraph flightGraph, Flight flight, int originId, int destinationId) {
     Set<Flight> connectingFlights = flightGraph.getConnectingFlights(flight);
     ArrayList<Itinerary> result = new ArrayList<>();
 
     LOGGER.info(String.format("Flight ID: %d Origin ID: %d Destination ID: %d", flight.getFlightNumber(), originId, destinationId));
+    
+    // Base Case: If flight's destination matches our destination, just add it to our itinerary
     if ((flight.getDestination().getId() == destinationId) && (!flight.isFullyBooked())) {
       Map<Integer, Flight> flights = new LinkedHashMap<>();
       flights.put(flight.getFlightNumber(), findFlightById(flight.getFlightNumber()).get(0));
@@ -60,14 +77,12 @@ public class FlightService {
         Map<Integer, Flight> alreadyVisitedFlights = new LinkedHashMap<>();
         ArrayList<Integer> alreadyVisitedOrigin = new ArrayList<>();
         if (!(nextFlight.isFullyBooked())) {
-          LOGGER.info("Doing search...");
           alreadyVisitedFlights.put(flight.getFlightNumber(), findFlightById(flight.getFlightNumber()).get(0));
           alreadyVisitedFlights.put(nextFlight.getFlightNumber(), findFlightById(nextFlight.getFlightNumber()).get(0));
           alreadyVisitedOrigin.add(originId);
           alreadyVisitedOrigin.add(nextFlight.getOrigin().getId());
 
-          // Add all possible itineraries from
-          // connecting flight to destination
+          // Add all possible itineraries from connecting flight to destination
           addValidItineraries(flightGraph, destinationId, result, alreadyVisitedFlights, nextFlight,
               alreadyVisitedOrigin);
         }
@@ -79,7 +94,7 @@ public class FlightService {
   private void addValidItineraries(FlightGraph flightGraph, int destinationId, ArrayList<Itinerary> result,
       Map<Integer, Flight> alreadyVisitedFlights, Flight flight, ArrayList<Integer> alreadyVisitedOrigin) {
 
-    // Base case where flightPath is already valid
+    // Base Case: If flight's destination matches our destination, just add it to our itinerary
     if ((flight.getDestination().getId() == destinationId) && (!(flight.isFullyBooked()))) {      
       result.add(new Itinerary(alreadyVisitedFlights));
     } else {

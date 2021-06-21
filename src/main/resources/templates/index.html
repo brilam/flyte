@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <title>Flyte - Find sweet deals for flights!</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+        <!--<link th:href="@{/styles/style.css}" rel="stylesheet" /> -->
+        <link href="style.css" rel="stylesheet"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    </head>
+    <body>
+         <!-- As a heading -->
+         <nav class="navbar navbar-light bg-light">
+            <span class="navbar-brand mb-0 h1 animate__animated animate__bounce animate__fadeIn" href="/">Flyte</span>
+        </nav>
+
+        <section id="hero" class="d-flex align-items-center">
+            <div class="container">
+                <h1 class="animate__animated animate__bounce animate__fadeIn caption-title">Flyte</h1>
+                <h2 class="animate__animated animate__bounce animate__fadeIn caption-text">Getting to your dream destination isn't hard. Come on, your vacation awaits you!</h1>
+            </div>
+        </section>
+       
+        <section>
+            <h1 class="section-title">Get started by looking for flights!</h1>
+
+            <div class="container">
+                <p>Anywhere you want to be, we'll get you there. Just search and see! Having trouble figuring out where to go? How about you check out what <a href="/locations">locations</a> we offer?</p>
+                <div class="col-lg-8">
+                    <form>
+                        <div class="form-group">
+                            
+                        </div>
+                        <div class="form-group">
+                          <input type="origin-location" class="form-control" id="origin-location" placeholder="Origin">
+                        </div>
+                        <div class="form-group">
+                            <input type="destination-location" class="form-control" id="destination-location" placeholder="Destination">
+                        </div>
+                       
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                      </form>
+                </div>
+            </div>
+        </section>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    </body>
+</html>
