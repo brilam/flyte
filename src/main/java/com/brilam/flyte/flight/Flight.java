@@ -20,10 +20,12 @@ public class Flight {
   
   @Column(name = "arrivalDate", columnDefinition="DATETIME")
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  // Date that it arrives at our destination
   private Date arrivalDate;
   
   @Column(name = "departureDate", columnDefinition="DATETIME")
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  // Date that it departs from origin
   private Date departureDate;
   
   @OneToOne(cascade = CascadeType.ALL)
@@ -106,5 +108,31 @@ public class Flight {
   
   public void setNumSeats(int numSeats) {
     this.numSeats = numSeats;
+  }
+  
+  public boolean isFullyBooked() {
+    return numSeats == 0;
+  }
+  
+  @Override
+  public boolean equals(Object obj) {
+    // Exact match (same object)
+    if (obj == this) {
+      return true;
+    }
+    
+    // Check if not instance of Flight
+    if (!(obj instanceof Flight)) {
+      return false;
+    }
+    
+    Flight otherFlight = (Flight) obj;
+    //  All attributes matching
+    return getFlightNumber() == otherFlight.getFlightNumber() && getOrigin().getId() == otherFlight.getOrigin().getId() && getDestination().getId() == otherFlight.getDestination().getId();
+  }
+  
+  @Override
+  public String toString() {
+    return String.format("Flight Number: %d\nOrigin Location: %d\nDestination Location: %d\nDeparture Date: %s", id, origin.getId(), destination.getId(), departureDate.toString());
   }
 }
