@@ -133,6 +133,6 @@ public class Flight {
   
   @Override
   public String toString() {
-    return String.format("Flight Number: %d\nOrigin Location: %d\nDestination Location: %d\nDeparture Date: %s", id, origin.getId(), destination.getId(), departureDate.toString());
+    return String.format("Flight Number: %d", id);
   }
 }

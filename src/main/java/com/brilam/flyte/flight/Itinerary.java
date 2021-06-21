@@ -3,16 +3,15 @@ package com.brilam.flyte.flight;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class Itinerary {
   // Itinerary IDs are String of the form FLIGHT#1-FLIGHT#2, etc...
   private String itineraryId;
-  // List of flight IDs
-  private List<Integer> flightNums;
+  private Map<Integer, Flight> flights;  
   private BigDecimal totalCost;
   private int originId;
   private int destinationId;
@@ -21,13 +20,9 @@ public class Itinerary {
   
   private static final Logger LOGGER = LoggerFactory.getLogger(Itinerary.class);
 
-  
-  // TODO: Probably remove this, since it is null (not being injected)
-  @Autowired
-  private FlightService flightService;
-  
-  public Itinerary(List<Integer> flightNums) {
-    this.flightNums = flightNums;
+  public Itinerary(Map<Integer, Flight> flights) {
+    this.flights = flights;
+    totalCost = new BigDecimal(0);
     makeItineraryId();
     addFlights();
   }
@@ -40,11 +35,11 @@ public class Itinerary {
    * Example: FLIGHT#1-FLIGHT#2
    */
   private void makeItineraryId() {
-    if (flightNums.size() == 1) {
-      itineraryId = String.format("%d", flightNums.get(0));
+    if (flights.size() == 1) {
+      itineraryId = String.format("%d", flights.keySet().toArray()[0]);
     } else {
-      List<String> flightString = flightNums.stream()
-          .map(flight -> String.valueOf(flight))
+      List<String> flightString = flights.keySet().stream()
+          .map(flightNum -> String.valueOf(flightNum))
           .collect(Collectors.toList());
       itineraryId = String.join("-", flightString);
     }
@@ -55,21 +50,19 @@ public class Itinerary {
    * and destination ID.
    */
   private void addFlights() {
-    List<Flight> flights = new ArrayList<>();
+    List<Flight> flightsList = new ArrayList<>();
     
-    for (Integer flightNum: flightNums) {
+    for (Integer flightNum: flights.keySet()) {
       LOGGER.info(String.format("Looking for flight: %d", flightNum.intValue()));
-      LOGGER.info("Flight service null"   + (flightService == null));
-      List<Flight> foundFlights = flightService.findFlightById(flightNum.intValue());
-      LOGGER.info(String.format("Found flights %s", foundFlights));
+      Flight flight = flights.get(flightNum);
+      LOGGER.info(String.format("Found flights %s", flight));
 
-      Flight flight = flightService.findFlightById(flightNum.intValue()).get(0);
       updateTotalCost(flight.getCost());
       updateTotalTime(flight.getTotalTimeInSeconds());
-      flights.add(flight);
+      flightsList.add(flight);
     }
-    setOriginId(flights.get(0).getOrigin().getId());
-    setDestinationId(flights.get(flights.size() - 1).getDestination().getId());
+    setOriginId(flightsList.get(0).getOrigin().getId());
+    setDestinationId(flightsList.get(flightsList.size() - 1).getDestination().getId());
   }
   
   /**

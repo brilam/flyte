@@ -2,7 +2,9 @@ package com.brilam.flyte.flight;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +33,7 @@ public class FlightService {
   public List<Itinerary> searchFlights(Date date, int originId, int destinationId) {
     List<Flight> allFlights = getAllFlights();    
     FlightGraph flightGraph = new FlightGraph(allFlights);
+    LOGGER.info(flightGraph.toString());
     List<Itinerary> possibleItineraries = new ArrayList<>();
     
     for (Flight flight: allFlights) {
@@ -42,26 +45,24 @@ public class FlightService {
     return possibleItineraries;
   }
   
-  
-  
-  private static List<Itinerary> getMatchingItineraries(FlightGraph flightGraph, Flight flight, int originId, int destinationId) {
+  private List<Itinerary> getMatchingItineraries(FlightGraph flightGraph, Flight flight, int originId, int destinationId) {
     Set<Flight> connectingFlights = flightGraph.getConnectingFlights(flight);
     ArrayList<Itinerary> result = new ArrayList<>();
 
     LOGGER.info(String.format("Flight ID: %d Origin ID: %d Destination ID: %d", flight.getFlightNumber(), originId, destinationId));
     if ((flight.getDestination().getId() == destinationId) && (!flight.isFullyBooked())) {
-      List<Integer> flights = new ArrayList<>();
-      flights.add(flight.getFlightNumber());
+      Map<Integer, Flight> flights = new HashMap<>();
+      flights.put(flight.getFlightNumber(), findFlightById(flight.getFlightNumber()).get(0));
       result.add(new Itinerary(flights));
-      LOGGER.info("reach here");
     } else {
      // Go through every connecting flight
       for (Flight nextFlight : connectingFlights) {
-        ArrayList<Integer> alreadyVisitedFlights = new ArrayList<>();
+        Map<Integer, Flight> alreadyVisitedFlights = new HashMap<>();
         ArrayList<Integer> alreadyVisitedOrigin = new ArrayList<>();
         if (!(nextFlight.isFullyBooked())) {
-          alreadyVisitedFlights.add(flight.getFlightNumber());
-          alreadyVisitedFlights.add(nextFlight.getFlightNumber());
+          LOGGER.info("Doing search...");
+          alreadyVisitedFlights.put(flight.getFlightNumber(), findFlightById(flight.getFlightNumber()).get(0));
+          alreadyVisitedFlights.put(nextFlight.getFlightNumber(), findFlightById(nextFlight.getFlightNumber()).get(0));
           alreadyVisitedOrigin.add(originId);
           alreadyVisitedOrigin.add(nextFlight.getOrigin().getId());
 
@@ -75,11 +76,11 @@ public class FlightService {
     return result;
   }
   
-  private static void addValidItineraries(FlightGraph flightGraph, int destinationId, ArrayList<Itinerary> result,
-      ArrayList<Integer> alreadyVisitedFlights, Flight flight, ArrayList<Integer> alreadyVisitedOrigin) {
+  private void addValidItineraries(FlightGraph flightGraph, int destinationId, ArrayList<Itinerary> result,
+      Map<Integer, Flight> alreadyVisitedFlights, Flight flight, ArrayList<Integer> alreadyVisitedOrigin) {
 
     // Base case where flightPath is already valid
-    if ((flight.getDestination().getId() == destinationId) && (!(flight.isFullyBooked()))) {
+    if ((flight.getDestination().getId() == destinationId) && (!(flight.isFullyBooked()))) {      
       result.add(new Itinerary(alreadyVisitedFlights));
     } else {
 
@@ -92,9 +93,11 @@ public class FlightService {
               && (!(nextFlight.isFullyBooked()))) {
 
             // Add onto data for every valid neighboring flight
-            ArrayList<Integer> updatedFlightPath = new ArrayList<>(alreadyVisitedFlights);
+            Map<Integer, Flight> updatedFlightPath = new HashMap<>();
+            updatedFlightPath.putAll(alreadyVisitedFlights);
+            
             ArrayList<Integer> alreadyVisitedPath = new ArrayList<>(alreadyVisitedOrigin);
-            updatedFlightPath.add(nextFlight.getFlightNumber());
+            updatedFlightPath.put(nextFlight.getFlightNumber(), findFlightById(nextFlight.getFlightNumber()).get(0));
             alreadyVisitedPath.add(nextFlight.getOrigin().getId());
 
             addValidItineraries(flightGraph, destinationId, result, updatedFlightPath,

@@ -5,11 +5,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.brilam.flyte.FlyteApplication;
 
 public class FlightGraph {
   private List<Flight> flights;
   private Map<Integer, Set<Integer>> flightGraph;
+  
+  private static final Logger LOGGER = LoggerFactory.getLogger(FlightGraph.class);
+
   
   public FlightGraph(List<Flight> flights) {
     this.flights = flights;
@@ -49,8 +54,12 @@ public class FlightGraph {
     long arrivalTime = flight.getArrivalDate().getTime();
     
     for (Flight currFlight : flights) {
+      LOGGER.info("Current flight origin ID: " + currFlight.getOrigin().getId());
+      LOGGER.info("Destination ID: " + destinationId);
+      LOGGER.info("Current flight destination ID: " + currFlight.getDestination().getId());
+
       // Checks if flight connect to current flight
-      if (currFlight.getOrigin().getId() == destinationId) {
+      if (!(currFlight.equals(flight)) && currFlight.getOrigin().getId() == destinationId) {
         long currDeparture = currFlight.getDepartureDate().getTime();
         long duration = currDeparture - arrivalTime;
         
@@ -58,7 +67,7 @@ public class FlightGraph {
         if ((duration >= FlyteApplication.MINIMUM_LAYOVER_TIME_MILLIS) && (duration <= FlyteApplication.MAXIMUM_LAYOVER_TIME_MILLIS)) {
           flightGraph.get(flight.getFlightNumber()).add(currFlight.getFlightNumber());
         }
-      } else if (currFlight.getDestination().getId() == originId) {
+      } else if (!(currFlight.equals(flight)) && currFlight.getDestination().getId() == originId) {
         // Checks if current flight connects to flight
         long currArrival = currFlight.getArrivalDate().getTime();
         long duration = departureTime - currArrival;
@@ -98,5 +107,10 @@ public class FlightGraph {
       paths.add(getFlight(flightId));
     }
     return paths;
+  }
+  
+  @Override
+  public String toString() {
+    return flightGraph.toString();
   }
 }
