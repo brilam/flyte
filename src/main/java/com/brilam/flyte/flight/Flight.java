@@ -86,14 +86,10 @@ public class Flight {
     this.destination = destination;
   }
   
-  public long getTotalTimeInSeconds() {
-    return totalTimeInSeconds;
+  public long getTotalTimeInMs() {
+    return arrivalDate.getTime() - departureDate.getTime();
   }
-  
-  public void setTotalTimeInSeconds(long totalTimeInSeconds) {
-    this.totalTimeInSeconds = totalTimeInSeconds;
-  }
-  
+    
   public BigDecimal getCost() {
     return cost;
   }

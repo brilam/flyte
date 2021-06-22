@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Itinerary {
   // Itinerary IDs are String of the form FLIGHT#1-FLIGHT#2, etc...
@@ -58,7 +59,7 @@ public class Itinerary {
       LOGGER.info(String.format("Found flights %s", flight));
 
       updateTotalCost(flight.getCost());
-      updateTotalTime(flight.getTotalTimeInSeconds());
+      updateTotalTime(flight.getTotalTimeInMs());
       flightsList.add(flight);
     }
     setOriginId(flightsList.get(0).getOrigin().getId());
@@ -107,5 +108,22 @@ public class Itinerary {
    */
   public long getTotalTime() {
     return totalTime;
+  }
+  
+  /**
+   * Returns all flights in the itinerary
+   * @return all flights in itinerary
+   */
+  public List<Flight> getFlights() {
+    return new ArrayList<>(flights.values());
+  }
+  
+  /**
+   * Returns the number of flights in the itineary.
+   * @return all flights in itiinerary
+   */
+  @JsonIgnore
+  public int getNumFlights() {
+    return flights.size();
   }
 }

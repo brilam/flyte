@@ -2,9 +2,24 @@ function search() {
     origin = document.getElementById("origin-location");
     destination = document.getElementById("destination-location");
     departure_date = document.getElementById("departure-date").value.replace("T", " ") + ":00";
+    order_by_cost = document.getElementById("cost").checked;
+    order_by_travel_time = document.getElementById("travel-time").checked;
+    order_by_flight_num = document.getElementById("num-flights").checked;
+
+    order_by = "";
+    if (order_by_cost == true) {
+        order_by = "cost";
+    } else if (order_by_travel_time == true) {
+        order_by = "time"
+    } else if (order_by_flight_num == true) {
+        order_by = "flights"
+    }
+
+    console.log("Order by: " + order_by);
+
 
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", "api/itinerary?departureDate=" + departure_date + "&originLocation=" + origin.value  + "&destinationLocation=" + destination.value, true);
+    xmlHttp.open("GET", "api/itinerary?departureDate=" + departure_date + "&originLocation=" + origin.value  + "&destinationLocation=" + destination.value + "&orderBy=" + order_by, true);
     xmlHttp.onreadystatechange = function() { 
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
             result = JSON.parse(xmlHttp.responseText);
@@ -24,15 +39,45 @@ function search() {
                 // Creates the table rows
                 for (var index = 0; index < result.length; index++) {
                     row = document.createElement("tr");
-                    itinerary_col = document.createElement("th");
-                    total_cost_col = document.createElement("th");
-                    total_time_col = document.createElement("th");
+                    itinerary_col = document.createElement("td");
+                    num_flights_col = document.createElement("td");
+                    total_cost_col = document.createElement("td");
+                    travel_time_col = document.createElement("td");
+                    departure_time_col = document.createElement("td");
+                    arrival_time_col = document.createElement("td");
+                    flight_path_col = document.createElement("td");
+
+
                     itinerary_col.append(result[index]["itineraryId"]);
-                    total_cost_col.append(result[index]["totalCost"]);
-                    total_time_col.append(result[0]["totalTime"]);
+                    num_flights_col.append(result[index]["flights"].length);
+                    total_cost_col.append("$" + result[index]["totalCost"]);
+                    travel_time_col.append(toHoursAndMins(result[index]["totalTime"]));
+                    flights = result[index]["flights"];
+                    departure_time_col.append(flights[0]["departureDate"]);
+                    arrival_time_col.append(flights[flights.length - 1]["arrivalDate"]);
+                    
+                    if (flights.length != 1) {
+                        for (var flight_index = 0; flight_index  < flights.length; flight_index++) {
+                            if (flight_index != flights.length - 1) {
+                                flight_path_col.append(flights[flight_index]["origin"]["name"]  + "->")
+                            } else {
+                                flight_path_col.append(flights[flight_index]["origin"]["name"]  + "->")
+                                flight_path_col.append(flights[flight_index]["destination"]["name"]);
+                            }
+                        }
+                    } else {
+                        flight_path_col.append(flights[0]["origin"]["name"]  + "->")
+                        flight_path_col.append(flights[0]["destination"]["name"])
+                    }
+
+
                     row.append(itinerary_col);
+                    row.append(num_flights_col);
                     row.append(total_cost_col);
-                    row.append(total_time_col);
+                    row.append(travel_time_col);
+                    row.append(departure_time_col);
+                    row.append(arrival_time_col);
+                    row.append(flight_path_col);
                     results.append(row);
 
                     console.log("Itinerary ID: " + result[index]["itineraryId"]);
@@ -53,6 +98,21 @@ function search() {
     }
     xmlHttp.send();
 }
+
+
+function toHoursAndMins(timeInMs) {
+    var milliseconds = Math.floor((timeInMs % 1000) / 100),
+    seconds = Math.floor((timeInMs / 1000) % 60),
+    minutes = Math.floor((timeInMs / (1000 * 60)) % 60),
+    hours = Math.floor((timeInMs / (1000 * 60 * 60)) % 24);
+
+    hours = (hours < 10) ? "0" + hours : hours;
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+    
+    
+    return hours + "h" + (minutes == "00" ? "": minutes + "m");
+  }
 
 function getCookie(name) {
     let cookieValue = null;

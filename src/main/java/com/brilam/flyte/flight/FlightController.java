@@ -3,6 +3,7 @@ package com.brilam.flyte.flight;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import org.slf4j.Logger;
@@ -39,7 +40,7 @@ public class FlightController {
   @GetMapping("/api/itinerary")
   public List<Itinerary> searchFlights(@RequestParam String departureDate,
       @RequestParam String originLocation,
-      @RequestParam String destinationLocation) {
+      @RequestParam String destinationLocation, @RequestParam String orderBy) {
 
     List<Location> origin = locationService.findLocationByName(originLocation);
     List<Location> destination = locationService.findLocationByName(destinationLocation);
@@ -58,7 +59,27 @@ public class FlightController {
       // Invalid date
       return new ArrayList<Itinerary>();
     }
+    
+    List<Itinerary> results = flightService.searchFlights(date, originId, destinationId);
+    Comparator<Itinerary> comparator = null;
+    
+    switch (orderBy) {
+      case "cost":
+        comparator = Comparator.comparing(Itinerary::getTotalCost);
+        break;
+      case "flights":
+        comparator = Comparator.comparing(Itinerary::getNumFlights);
+        break;
+      case "time":
+        comparator = Comparator.comparing(Itinerary::getTotalTime);
+        break;
+      default:
+        // Should never happen, but just in case!
+        comparator = Comparator.comparing(Itinerary::getTotalCost);
+    }
 
-    return flightService.searchFlights(date, originId, destinationId); 
+    results.sort(comparator);
+
+    return results; 
   }
 }
