@@ -27,14 +27,13 @@ section {
     padding-bottom:40px;
 }
 
-.section-title {
+.section-text, .section-title {
     color:white;
     text-align:center;
 }
 
 p {
     font-size:20px;
-    color:white;
     word-wrap:break-word;
 }
 
@@ -47,27 +46,34 @@ p {
     background-position: 10%; 
 }
 
-.navbar-light > .navbar-brand {
+a > .navbar-brand {
     padding-left:20px;
     font-family: 'Oswald', sans-serif;
     font-size:26px;
-    color:#007373;
+    color:#007373!important;
     text-transform: uppercase;
     cursor:pointer;
 }
 
 .form-control {
     background: #007373;
-    border:none;
     color:white;
+    border:none;
+}
+
+.form-control:focus {
+    color:black;
 }
 
 .form-group {
     max-width:400px;
-    color:white;
     padding-bottom:10px;
 }
 
 .form-control::placeholder {
     color:rgb(224, 224, 224);
+}
+
+tr, th {
+    color:white;
 }

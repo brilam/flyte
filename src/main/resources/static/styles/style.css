@@ -27,7 +27,7 @@ section {
     padding-bottom:40px;
 }
 
-.section-title {
+.section-text, .section-title {
     color:white;
     text-align:center;
 }
@@ -47,11 +47,43 @@ p {
     background-position: 10%; 
 }
 
-.navbar-light > .navbar-brand {
+a > .navbar-brand {
     padding-left:20px;
     font-family: 'Oswald', sans-serif;
     font-size:26px;
-    color:#007373;
+    color:#007373!important;
     text-transform: uppercase;
     cursor:pointer;
+}
+
+.form-control {
+    background: #007373;
+    color:white;
+    border:none;
+}
+
+.form-control:focus {
+    color:black;
+}
+
+.form-group {
+    max-width:400px;
+    padding-bottom:10px;
+}
+
+.form-control::placeholder {
+    color:rgb(224, 224, 224);
+}
+
+.form-control:focus {
+    color:white;
+}
+
+input {
+    text-align:center;
+    color:white;
+}
+
+tr, th {
+    color:white;
 }
