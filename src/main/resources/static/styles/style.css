@@ -34,7 +34,6 @@ section {
 
 p {
     font-size:20px;
-    color:white;
     word-wrap:break-word;
 }
 
@@ -56,6 +55,15 @@ a > .navbar-brand {
     cursor:pointer;
 }
 
+.inputs {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  width: 80rem;
+  margin: 0 auto;
+}
+
 .form-control {
     background: #007373;
     color:white;
@@ -73,15 +81,6 @@ a > .navbar-brand {
 
 .form-control::placeholder {
     color:rgb(224, 224, 224);
-}
-
-.form-control:focus {
-    color:white;
-}
-
-input {
-    text-align:center;
-    color:white;
 }
 
 tr, th {

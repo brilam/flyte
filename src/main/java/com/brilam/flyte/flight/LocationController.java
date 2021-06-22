@@ -1,5 +1,7 @@
 package com.brilam.flyte.flight;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,17 +21,25 @@ public class LocationController {
   }
   
   @GetMapping("/api/locations")
-  public List<Location> getLocation(@RequestParam(required=false) Integer id, @RequestParam(required=false) String name) {
+  public List<Location> getLocation(@RequestParam(required=false) Integer id, @RequestParam(required=false) String names) {
     
     LOGGER.info("ID: " + id);
-    LOGGER.info("Name: " + name);
+    LOGGER.info("Name: " + names);
 
     if (id != null) {
       return locationService.findLocationById(id);
     }
     
-    if (name != null) {
-      return locationService.findLocationByName(name);
+    if (names != null) {
+      String[] locationNames = names.split(",");
+      LOGGER.info("Array:" + Arrays.toString(locationNames));
+      List<Location> locations = new ArrayList<>();
+      for (String locationName: locationNames) {
+        LOGGER.info("Adding:"  + locationService.findLocationByName(locationName).toString());
+        locations.addAll(locationService.findLocationByName(locationName));
+      }
+      LOGGER.info(locations.toString());
+      return locations;
     }
    
     // Fallback for nothing provided or both optional parameters provided

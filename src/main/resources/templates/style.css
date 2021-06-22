@@ -55,6 +55,15 @@ a > .navbar-brand {
     cursor:pointer;
 }
 
+.inputs {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  width: 80rem;
+  margin: 0 auto;
+}
+
 .form-control {
     background: #007373;
     color:white;
