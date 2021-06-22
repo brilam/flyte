@@ -9,6 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.brilam.flyte.FlyteApplication;
 
+/**
+ * This class is used to represent a graph where node
+ * is a flight number, and vertex is a set of flight numbers
+ * (these are the connecting flights).
+ * @author Brian Lam
+ *
+ */
 public class FlightGraph {
   private List<Flight> flights;
   private Map<Integer, Set<Integer>> flightGraph;
@@ -21,7 +28,6 @@ public class FlightGraph {
     flightGraph = new HashMap<>();
     createEmptyConnections();
     populateConnections();
-    
   }
   
   /**

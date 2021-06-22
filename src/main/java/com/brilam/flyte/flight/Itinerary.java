@@ -16,7 +16,7 @@ public class Itinerary {
   private BigDecimal totalCost;
   private int originId;
   private int destinationId;
-  // Total time in seconds
+  // Total time in milliseconds
   private long totalTime;
   
   private static final Logger LOGGER = LoggerFactory.getLogger(Itinerary.class);
@@ -119,8 +119,8 @@ public class Itinerary {
   }
   
   /**
-   * Returns the number of flights in the itineary.
-   * @return all flights in itiinerary
+   * Returns the number of flights in the itinerary.
+   * @return all flights in itinerary
    */
   @JsonIgnore
   public int getNumFlights() {

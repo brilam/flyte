@@ -10,7 +10,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 @Entity(name = "flights")
 public class Flight {
@@ -40,7 +42,8 @@ public class Flight {
   @JoinColumn(name = "destination", referencedColumnName = "id")
   private Location destination;
   
-  @Column(name = "travelTime")
+  @Transient
+  @JsonInclude()
   private long totalTimeInSeconds;
   
   private BigDecimal cost;

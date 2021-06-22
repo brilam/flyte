@@ -31,7 +31,7 @@ public class FlightService {
   }
   
   /**
-   * Returns all itinerary that go from origin ID to destination ID.
+   * Returns all itinerary that depart from origin ID to destination ID.
    * @param date the date of departure
    * @param originId the origin ID (where you depart from)
    * @param destinationId the destination ID (the location where you wish to go to)
@@ -53,12 +53,12 @@ public class FlightService {
   }
   
   /**
-   * Returns all matching itinerary that go from
-   * @param flightGraph
-   * @param flight
-   * @param originId
-   * @param destinationId
-   * @return
+   * Returns all matching itinerary that go from origin location ID to destination location ID.
+   * @param flightGraph the graph of flights (ID -> Connecting flight IDs)
+   * @param flight the flight to check if destination matches
+   * @param originId the origin location ID
+   * @param destinationId the destination location ID
+   * @return all matching itineraries that go from origin location ID to destination location ID
    */
   private List<Itinerary> getMatchingItineraries(FlightGraph flightGraph, Flight flight, int originId, int destinationId) {
     Set<Flight> connectingFlights = flightGraph.getConnectingFlights(flight);
@@ -91,6 +91,16 @@ public class FlightService {
     return result;
   }
   
+  
+  /**
+   * Adds the itinerary to result if it reaches to our destination ID.
+   * @param flightGraph the flight graph
+   * @param destinationId the destination location ID
+   * @param result the valid itineraries that reach the destination
+   * @param alreadyVisitedFlights the already visited flights
+   * @param flight the flight to check if it reaches our destination
+   * @param alreadyVisitedOrigin the list of origin locations visited
+   */
   private void addValidItineraries(FlightGraph flightGraph, int destinationId, ArrayList<Itinerary> result,
       Map<Integer, Flight> alreadyVisitedFlights, Flight flight, ArrayList<Integer> alreadyVisitedOrigin) {
 
@@ -99,8 +109,7 @@ public class FlightService {
       result.add(new Itinerary(alreadyVisitedFlights));
     } else {
 
-      // Go through every valid connection and recursively
-      // add and check routes
+      // Go through every valid connection and recursively add and check routes
       Set<Flight> connectingFlights = flightGraph.getConnectingFlights(flight);
       if (!connectingFlights.isEmpty()) {
         for (Flight nextFlight : connectingFlights) {
