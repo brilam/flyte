@@ -1,24 +1,54 @@
 function search() {
     origin = document.getElementById("origin-location");
     destination = document.getElementById("destination-location");
-    departure_date = document.getElementById("departure-date").value.replace("T", "") + ":00";
+    departure_date = document.getElementById("departure-date").value.replace("T", " ") + ":00";
 
-    console.log(origin.value);
-    origin_id = -1
-    destination_id = -1;
-
-    // Pardon the bad code! :(
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", "api/locations?names=" + origin.value  + "," + destination.value, true);
+    xmlHttp.open("GET", "api/itinerary?departureDate=" + departure_date + "&originLocation=" + origin.value  + "&destinationLocation=" + destination.value, true);
     xmlHttp.onreadystatechange = function() { 
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
             result = JSON.parse(xmlHttp.responseText);
-            console.log(result);
-            origin_id = result[0]['id'];
-            destination_id = result[1]['id'];
-            console.log("Departure Date: " + departure_date);
-            console.log("Origin ID: " + origin_id);
-            console.log("Destination ID: " + destination_id);
+            results = document.getElementById("results");
+            table = document.getElementsByClassName("table")[0];
+            search_results = document.getElementById("search-results");
+            result_msg = document.getElementById("results-msg");
+
+            if (result.length > 0) {
+                // Hide search-results section and message if they were previously displayed
+                if (search_results.style.display == "block") {
+                    search_results.style.display = "none";
+                    table.style.display = "none";
+                    results.innerHTML  = '';
+                }
+
+                // Creates the table rows
+                for (var index = 0; index < result.length; index++) {
+                    row = document.createElement("tr");
+                    itinerary_col = document.createElement("th");
+                    total_cost_col = document.createElement("th");
+                    total_time_col = document.createElement("th");
+                    itinerary_col.append(result[index]["itineraryId"]);
+                    total_cost_col.append(result[index]["totalCost"]);
+                    total_time_col.append(result[0]["totalTime"]);
+                    row.append(itinerary_col);
+                    row.append(total_cost_col);
+                    row.append(total_time_col);
+                    results.append(row);
+
+                    console.log("Itinerary ID: " + result[index]["itineraryId"]);
+                    console.log("Total Cost: " + result[index]["totalCost"]);
+                }
+                // Display results
+                table.style.display = "table";
+                result_msg.innerHTML = "We are back with " + result.length + " results!";
+
+            } else {
+                result_msg.innerHTML = "No results found!";
+                // Hide the table if not results found
+                table.style.display = "none";
+            }
+            // In all cases, show the search results display block (since message must be shown)
+            search_results.style.display = "block";
         }
     }
     xmlHttp.send();
